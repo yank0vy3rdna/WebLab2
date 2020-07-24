@@ -3,7 +3,6 @@ package servlets;
 import models.Entry;
 import models.EntryList;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
