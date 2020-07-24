@@ -57,11 +57,6 @@ public class AreaCheckServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        // TODO
-        //  Страница, возвращаемая servlets.AreaCheckServlet, должна содержать:
-        //  Таблицу, содержащую полученные параметры.
-        //  Результат вычислений - факт попадания или непопадания точки в область.
-        //  Ссылку на страницу с веб-формой для формирования нового запроса.
 
         HttpSession session = req.getSession();
 
