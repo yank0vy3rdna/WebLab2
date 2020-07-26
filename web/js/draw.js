@@ -123,7 +123,7 @@ function draw() {
         // Рисуем координатные оси
 
         draw_coordinates(ctx)
-
+        drawPointIfValid()
     } else {
         alert("You're using too old browser")
     }
@@ -137,7 +137,6 @@ function drawPoint(x, y) {
         let R = ctx.canvas.height / 4 / r_val
 
         ctx.beginPath();
-        console.log(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y)
         ctx.moveTo(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y);
         ctx.arc(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y, ctx.canvas.width / 300, 0, 2 * Math.PI);
         ctx.closePath();
@@ -159,22 +158,27 @@ $('#canvas').click(function (event) {
         let kR = r_val / (ctx.canvas.height / 4)
         const x = event.offsetX,
             y = event.offsetY;
-        console.log(x, y)
         const rly_x = (x - ctx.canvas.width / 2) * kR;
         const rly_y = (ctx.canvas.height / 2 - y) * kR;
-        console.log(rly_x, rly_y)
         drawPoint(rly_x, rly_y)
+        const x_inp = $("#x_inp")
+        x_inp.append(`<option value="${rly_x.toString()}">${rly_x.toString()}</option>`)
+        x_inp[0].value = rly_x.toString()
+        $("#y_inp")[0].value = rly_y.toString()
+        $("#submit")[0].click()
     } catch (e) {
-        console.error(e)
+        alert("Невозможно определить координаты точки")
     }
 });
 
-function drawPointIf() {
+function drawPointIfValid() {
     if (check(false)) {
-        drawPoint()
+        drawPoint(getXValue(),getYValue())
     }
 }
 
 $(window).resize(draw)
 $(window).on("load", draw)
-$("#r_inp").on("change", draw)
+$("#r_inp").on("input", draw)
+$("#x_inp").on("input", drawPointIfValid)
+$("#y_inp").on("input", drawPointIfValid)
