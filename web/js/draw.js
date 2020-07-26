@@ -18,8 +18,8 @@ function draw_coordinates(ctx) {
     let R = ctx.canvas.height / 4
     let R_text;
     try {
-         R_text = getRValue(false)
-    }catch (e) {
+        R_text = getRValue(false)
+    } catch (e) {
         R_text = '1'
     }
     ctx.strokeStyle = "black";
@@ -29,10 +29,10 @@ function draw_coordinates(ctx) {
     ctx.msImageSmoothingEnabled = false;
     ctx.imageSmoothingEnabled = false;
     //Вертикальные черты
-    ctx.fillText(-R_text / 2, Math.round((ctx.canvas.width / 2.05 + ctx.canvas.width/40)), Math.round(ctx.canvas.height / 2 + R / 2 + 2))
-    ctx.fillText(-R_text, Math.round(ctx.canvas.width / 2.05 + ctx.canvas.width/40), Math.round(ctx.canvas.height / 2 + R + 2))
-    ctx.fillText(R_text / 2, Math.round(ctx.canvas.width / 2.05 + ctx.canvas.width/40), Math.round(ctx.canvas.height / 2 - R / 2 + 2))
-    ctx.fillText(R_text, Math.round(ctx.canvas.width / 2.05 + ctx.canvas.width/40), Math.round(ctx.canvas.height / 2 - R + 2))
+    ctx.fillText(-R_text / 2, Math.round((ctx.canvas.width / 2.05 + ctx.canvas.width / 40)), Math.round(ctx.canvas.height / 2 + R / 2 + 2))
+    ctx.fillText(-R_text, Math.round(ctx.canvas.width / 2.05 + ctx.canvas.width / 40), Math.round(ctx.canvas.height / 2 + R + 2))
+    ctx.fillText(R_text / 2, Math.round(ctx.canvas.width / 2.05 + ctx.canvas.width / 40), Math.round(ctx.canvas.height / 2 - R / 2 + 2))
+    ctx.fillText(R_text, Math.round(ctx.canvas.width / 2.05 + ctx.canvas.width / 40), Math.round(ctx.canvas.height / 2 - R + 2))
     ctx.beginPath()
     ctx.moveTo(ctx.canvas.width / 2.05, ctx.canvas.height / 2 + R / 2)
     ctx.lineTo(ctx.canvas.width / 1.95, ctx.canvas.height / 2 + R / 2)
@@ -129,24 +129,26 @@ function draw() {
     }
 }
 
-function drawPoint(x, y) {
+function drawPoint(x, y, alpha) {
     draw()
     let ctx = $('#canvas')[0].getContext('2d')
+    let r_val
     try {
-        let r_val = getRValue(true)
-        let R = ctx.canvas.height / 4 / r_val
-
-        ctx.beginPath();
-        ctx.moveTo(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y);
-        ctx.arc(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y, ctx.canvas.width / 300, 0, 2 * Math.PI);
-        ctx.closePath();
-        ctx.strokeStyle = "red";
-        ctx.fillStyle = "red";
-        ctx.fill();
-        ctx.stroke();
+        r_val = getRValue(true)
     } catch (e) {
+        r_val = 1
         console.error(e)
     }
+    let R = ctx.canvas.height / 4 / r_val
+
+    ctx.beginPath();
+    ctx.moveTo(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y);
+    ctx.arc(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y, ctx.canvas.width / 300, 0, 2 * Math.PI);
+    ctx.closePath();
+    ctx.strokeStyle = "rgba(255, 0, 0, " + alpha + ")";
+    ctx.fillStyle = "rgba(255, 0, 0, " + alpha + ")";
+    ctx.fill();
+    ctx.stroke();
 }
 
 
@@ -160,7 +162,7 @@ $('#canvas').click(function (event) {
             y = event.offsetY;
         const rly_x = (x - ctx.canvas.width / 2) * kR;
         const rly_y = (ctx.canvas.height / 2 - y) * kR;
-        drawPoint(rly_x, rly_y)
+        drawPoint(rly_x, rly_y, 1)
         const x_inp = $("#x_inp")
         x_inp.append(`<option value="${rly_x.toString()}">${rly_x.toString()}</option>`)
         x_inp[0].value = rly_x.toString()
@@ -173,12 +175,59 @@ $('#canvas').click(function (event) {
 
 function drawPointIfValid() {
     if (check(false)) {
-        drawPoint(getXValue(),getYValue())
+        drawPoint(getXValue(), getYValue(), 1)
     }
 }
-
+function getBeforeValues() {
+    var myRows = [];
+    var $headers = $("th");
+    $("tbody tr").each(function (index) {
+        $cells = $(this).find("td");
+        myRows[index] = {};
+        $cells.each(function (cellIndex) {
+            myRows[index][$($headers[cellIndex]).html()] = $(this).html();
+        });
+    });
+    return myRows
+}
+function drawPoints() {
+    const myRows = getBeforeValues()
+    const alphastep = myRows.length<=5? 1. / (myRows.length) : 0.2
+    draw()
+    let ctx = $('#canvas')[0].getContext('2d')
+    let r_val
+    try {
+        r_val = getRValue(true)
+    } catch (e) {
+        r_val = 1
+        console.error(e)
+    }
+    let R = ctx.canvas.height / 4 / r_val
+    for (let i = 0; i < myRows.length; i++) {
+        const x = myRows[i]['X'],
+            y = myRows[i]['Y'];
+        ctx.beginPath();
+        ctx.moveTo(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y);
+        ctx.arc(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y, ctx.canvas.width / 300, 0, 2 * Math.PI);
+        ctx.closePath();
+        if (myRows[i]['Result']===' true '){
+            ctx.strokeStyle = "rgba(0, 255, 0, " + (1. - alphastep * i) + ")";
+            ctx.fillStyle = "rgba(0, 255, 0, " + (1. - alphastep * i) + ")";
+        }else {
+            ctx.strokeStyle = "rgba(255, 0, 0, " + (1. - alphastep * i) + ")";
+            ctx.fillStyle = "rgba(255, 0, 0, " + (1. - alphastep * i) + ")";
+        }
+        ctx.fill();
+        ctx.stroke();
+    }
+}
+const r_inp = $("#r_inp")
+r_inp[0].value = getBeforeValues()[0]['R']
 $(window).resize(draw)
-$(window).on("load", draw)
-$("#r_inp").on("input", draw)
+$(window).on("load", function () {
+    draw()
+    drawPoints()
+})
+r_inp.on("input", draw)
 $("#x_inp").on("input", drawPointIfValid)
 $("#y_inp").on("input", drawPointIfValid)
