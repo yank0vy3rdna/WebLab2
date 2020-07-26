@@ -24,10 +24,10 @@ function draw_coordinates(ctx) {
     ctx.msImageSmoothingEnabled = false;
     ctx.imageSmoothingEnabled = false;
     //Вертикальные черты
-    ctx.fillText(-R_text/2, Math.round((ctx.canvas.width / 2.05+8)), Math.round(ctx.canvas.height / 2 + R / 2+2))
-    ctx.fillText(-R_text, Math.round(ctx.canvas.width / 2.05+8), Math.round(ctx.canvas.height / 2 + R+2))
-    ctx.fillText(R_text/2, Math.round(ctx.canvas.width / 2.05+8), Math.round(ctx.canvas.height / 2 - R / 2+2))
-    ctx.fillText(R_text, Math.round(ctx.canvas.width / 2.05+8), Math.round(ctx.canvas.height / 2 - R+2))
+    ctx.fillText(-R_text / 2, Math.round((ctx.canvas.width / 2.05 + 8)), Math.round(ctx.canvas.height / 2 + R / 2 + 2))
+    ctx.fillText(-R_text, Math.round(ctx.canvas.width / 2.05 + 8), Math.round(ctx.canvas.height / 2 + R + 2))
+    ctx.fillText(R_text / 2, Math.round(ctx.canvas.width / 2.05 + 8), Math.round(ctx.canvas.height / 2 - R / 2 + 2))
+    ctx.fillText(R_text, Math.round(ctx.canvas.width / 2.05 + 8), Math.round(ctx.canvas.height / 2 - R + 2))
     ctx.beginPath()
     ctx.moveTo(ctx.canvas.width / 2.05, ctx.canvas.height / 2 + R / 2)
     ctx.lineTo(ctx.canvas.width / 1.95, ctx.canvas.height / 2 + R / 2)
@@ -47,10 +47,10 @@ function draw_coordinates(ctx) {
     ctx.lineTo(ctx.canvas.width / 1.95, ctx.canvas.height / 2 - R)
     ctx.stroke()
     // Горизонтальные черты
-    ctx.fillText(-R_text/2, Math.round(ctx.canvas.width / 2 - R / 2-6), Math.round(ctx.canvas.height / 2.2))
-    ctx.fillText(-R_text, Math.round(ctx.canvas.width / 2 - R-3), Math.round(ctx.canvas.height / 2.2))
-    ctx.fillText(R_text/2, Math.round(ctx.canvas.width / 2 + R / 2-6), Math.round(ctx.canvas.height / 2.2))
-    ctx.fillText(R_text, Math.round(ctx.canvas.width / 2 + R-3), Math.round(ctx.canvas.height / 2.2))
+    ctx.fillText(-R_text / 2, Math.round(ctx.canvas.width / 2 - R / 2 - 6), Math.round(ctx.canvas.height / 2.2))
+    ctx.fillText(-R_text, Math.round(ctx.canvas.width / 2 - R - 3), Math.round(ctx.canvas.height / 2.2))
+    ctx.fillText(R_text / 2, Math.round(ctx.canvas.width / 2 + R / 2 - 6), Math.round(ctx.canvas.height / 2.2))
+    ctx.fillText(R_text, Math.round(ctx.canvas.width / 2 + R - 3), Math.round(ctx.canvas.height / 2.2))
     ctx.beginPath()
     ctx.moveTo(ctx.canvas.width / 2 - R / 2, ctx.canvas.height / 2.1)
     ctx.lineTo(ctx.canvas.width / 2 - R / 2, ctx.canvas.height / 1.9)
@@ -84,15 +84,15 @@ function draw() {
         ctx.canvas.height = ctx.canvas.offsetHeight
 
         let R = ctx.canvas.height / 4
-        ctx.font= Math.round(ctx.canvas.width/50) + 'px verdana';
+        ctx.font = Math.round(ctx.canvas.width / 50) + 'px verdana';
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height)
 
 
         // Сектор
 
         ctx.beginPath();
-        ctx.moveTo( ctx.canvas.width / 2, ctx.canvas.height / 2);
-        ctx.arc(ctx.canvas.width / 2, ctx.canvas.height / 2, R, 0, -Math.PI / 2, true);
+        ctx.moveTo(ctx.canvas.width / 2, ctx.canvas.height / 2);
+        ctx.arc(ctx.canvas.width / 2, ctx.canvas.height / 2, R, -Math.PI, -Math.PI / 2, false);
         ctx.closePath();
         ctx.strokeStyle = "rgba(91,95,201,0.58)";
         ctx.fillStyle = "rgba(91,95,201,0.58)";
@@ -101,15 +101,15 @@ function draw() {
 
         // Прямоугольник
 
-        ctx.fillRect(ctx.canvas.width/2-R, ctx.canvas.height/2-R,R,R)
+        ctx.fillRect(ctx.canvas.width / 2 - R/2, ctx.canvas.height / 2 + R, R/2, -R)
 
         // Треугольник
 
         ctx.beginPath()
-        ctx.moveTo(ctx.canvas.width/2-R,ctx.canvas.height/2)
-        ctx.lineTo(ctx.canvas.width/2,ctx.canvas.height/2+R/2)
-        ctx.lineTo(ctx.canvas.width/2,ctx.canvas.height/2)
-        ctx.lineTo(ctx.canvas.width/2-R,ctx.canvas.height/2)
+        ctx.moveTo(ctx.canvas.width / 2 + R, ctx.canvas.height / 2)
+        ctx.lineTo(ctx.canvas.width / 2, ctx.canvas.height / 2 - R)
+        ctx.lineTo(ctx.canvas.width / 2, ctx.canvas.height / 2)
+        ctx.lineTo(ctx.canvas.width / 2 + R, ctx.canvas.height / 2)
         ctx.closePath()
         ctx.fill()
         ctx.stroke()
@@ -122,21 +122,27 @@ function draw() {
         alert("You're using too old browser")
     }
 }
-function drawPoint(x,y){
+
+function drawPoint(x, y) {
     draw()
     let ctx = $('#canvas')[0].getContext('2d')
-    let r_val = $("#r_inp")[0].value
-    let R = ctx.canvas.height / 4 / r_val
+    const r_inp = $("#r_inp")
+    let r_val = r_inp[0].value
+    if (check_val(r_inp, validate_settings.R)) {
+        let R = ctx.canvas.height / 4 / r_val
 
-    ctx.beginPath();
-    console.log(ctx.canvas.width / 2+R*x,ctx.canvas.height / 2-R*y)
-    ctx.moveTo( ctx.canvas.width / 2+R*x, ctx.canvas.height / 2-R*y);
-    ctx.arc( ctx.canvas.width / 2+R*x, ctx.canvas.height / 2-R*y, ctx.canvas.width/300,0,2*Math.PI);
-    ctx.closePath();
-    ctx.strokeStyle = "red";
-    ctx.fillStyle = "red";
-    ctx.fill();
-    ctx.stroke();
+        ctx.beginPath();
+        console.log(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y)
+        ctx.moveTo(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y);
+        ctx.arc(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y, ctx.canvas.width / 300, 0, 2 * Math.PI);
+        ctx.closePath();
+        ctx.strokeStyle = "red";
+        ctx.fillStyle = "red";
+        ctx.fill();
+        ctx.stroke();
+    } else {
+        invalid_mark(r_inp, false)
+    }
 }
 
 const elem = $('#canvas'),
@@ -145,20 +151,20 @@ const elem = $('#canvas'),
     context = elem[0].getContext('2d')
 
 // Add event listener for `click` events.
-elem.click(function(event) {
+$('#canvas').click(function (event) {
     const r_inp = $("#r_inp")
     let r_val = r_inp[0].value
-    if (check_val(r_inp, validate_settings.R)){
-        let kR = r_val/(context.canvas.height / 4)
-        const x = event.pageX - elemLeft-1,
-            y = event.pageY - elemTop-1;
+    if (check_val(r_inp, validate_settings.R)) {
+        let kR = r_val / (context.canvas.height / 4)
+        const x = event.offsetX,
+            y = event.offsetY;
         console.log(x, y)
-        const rly_x = (x - context.canvas.width / 2) * kR ;
-        const rly_y = (context.canvas.height / 2 - y) *kR;
+        const rly_x = (x - context.canvas.width / 2) * kR;
+        const rly_y = (context.canvas.height / 2 - y) * kR;
         console.log(rly_x, rly_y)
-        drawPoint(rly_x,rly_y)
-    }else {
-        invalid_mark(r_inp, true)
+        drawPoint(rly_x, rly_y)
+    } else {
+        invalid_mark(r_inp, false)
     }
 });
 $(window).resize(draw)
