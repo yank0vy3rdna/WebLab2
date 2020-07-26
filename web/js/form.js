@@ -33,17 +33,14 @@ function invalid_mark(inp, valid) {
     }
 }
 
+function check_elem(elem, settings){
+    const valid = check_val(elem, settings);
+    invalid_mark(elem, valid)
+    return valid
+}
+
 function check(){
-    const x_inp = $("#x_inp")
-    const y_inp = $("#y_inp")
-    const r_inp = $("#r_inp")
-    const x_valid = check_val(x_inp, validate_settings.X);
-    const y_valid = check_val(y_inp, validate_settings.Y);
-    const r_valid = check_val(r_inp, validate_settings.R);
-    invalid_mark(x_inp,x_valid)
-    invalid_mark(y_inp,y_valid)
-    invalid_mark(r_inp,r_valid)
-    return x_valid && y_valid && r_valid
+    return check_elem($("#x_inp"), validate_settings.X) && check_elem($("#y_inp"),validate_settings.Y) && check_elem($("#r_inp"),validate_settings.R)
 }
 function setEventListener(checkFunc){
     $("#submit").on('click', function(event) {

@@ -15,75 +15,80 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 </head>
 <body>
-<div class="container">
-    <nav class="navbar navbar-dark bg-dark">
+<div class="container-fluid">
+    <div class="row">
+        <nav class="navbar navbar-dark bg-dark m-3 col-xl-10 mx-auto">
 
-        <a class="navbar-brand" href="#">Крюков Андрей Юрьевич, P3214, вариант 2521</a>
-    </nav>
-</div>
-<div class="container">
-    <div id="chart"></div>
-    <div>
-        <form id="form" method="POST">
-            <div class="form-group">
-                <label class="col-xs-2 col-form-label" for="x_inp">X</label>
-                <select name="X" class="form-control" id="x_inp">
-                    <option>-5</option>
-                    <option>-4</option>
-                    <option>-3</option>
-                    <option>-2</option>
-                    <option>-1</option>
-                    <option>0</option>
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                </select>
-                <div class="invalid-feedback">
-                    It isn't valid number. Please provide X between -5 and 3.
+            <a class="navbar-brand" href="#">Крюков Андрей Юрьевич, P3214, вариант 2521</a>
+        </nav>
+        <div id="chart" class="mx-auto col-xl-7">
+            <canvas id="canvas" style="width: 100%; height: 40vh"></canvas>
+        </div>
+        <div class="col-xl-6 mx-auto">
+            <form id="form" method="POST">
+                <div class="form-group row">
+                    <label for="x_inp" class="col-sm-2 col-form-label">X</label>
+                    <div class="col-sm-10">
+                        <select name="X" class="form-control" id="x_inp">
+                            <option>-5</option>
+                            <option>-4</option>
+                            <option>-3</option>
+                            <option>-2</option>
+                            <option>-1</option>
+                            <option>0</option>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-xs-2 col-form-label" for="y_inp">Y</label>
-                <input name="Y" type="text" class="form-control" id="y_inp" placeholder="Enter Y(-5 .. 3)">
-                <div class="invalid-feedback">
-                    It isn't valid number. Please provide Y between -5 and 3.
+                <div class="form-group row">
+                    <label for="y_inp" class="col-sm-2 col-form-label">Y</label>
+                    <div class="col-sm-10">
+                        <input name="Y" type="text" class="form-control" id="y_inp" placeholder="Enter Y(-5 .. 3)">
+                    </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <label class="col-xs-2 col-form-label" for="r_inp">R</label>
-                <input name="R" type="text" class="form-control" id="r_inp" placeholder="Enter R(1 .. 4)">
-                <div class="invalid-feedback">
-                    It isn't valid number. Please provide X between 1 and 4.
+                <div class="form-group row">
+                    <label for="r_inp" class="col-sm-2 col-form-label">R</label>
+                    <div class="col-sm-10">
+                        <input name="R" type="text" class="form-control" id="r_inp" placeholder="Enter R(1 .. 4)">
+                    </div>
                 </div>
-            </div>
-            <button type="submit" id="submit" class="btn btn-primary">Submit</button>
-        </form>
-    </div>
-    <div id="table">
-        <table class="table table-dark">
-            <thead>
-            <tr>
-                <th scope="col">X</th>
-                <th scope="col">Y</th>
-                <th scope="col">R</th>
-                <th scope="col">Result</th>
-            </tr>
-            </thead>
-            <tbody>
-            <jsp:useBean id="entryList" scope="session" class="models.EntryList"/>
-            <c:forEach var="entry"
-                       items="${entryList.entryList}">
+                <div class="form-group row">
+                    <div class="col-sm-10 col-form-label"></div>
+                    <div class="col-sm-2">
+                        <button type="submit" id="submit" class="btn btn-dark">Submit</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div id="table" class="col-xl-7 mx-auto">
+            <table class="table table-dark">
+                <thead>
                 <tr>
-                    <td> ${ entry.x}</td>
-                    <td> ${entry.y}</td>
-                    <td> ${entry.r}</td>
-                    <td> ${entry.result} </td>
+                    <th scope="col">X</th>
+                    <th scope="col">Y</th>
+                    <th scope="col">R</th>
+                    <th scope="col">Result</th>
                 </tr>
-            </c:forEach>
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                <jsp:useBean id="entryList" scope="session" class="models.EntryList"/>
+                <c:forEach var="entry"
+                           items="${entryList.entryList}">
+                    <tr>
+                        <td> ${ entry.x}</td>
+                        <td> ${entry.y}</td>
+                        <td> ${entry.r}</td>
+                        <td> ${entry.result} </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 <script src="js/form.js"></script>
+<script src="js/draw.js"></script>
 </body>
 </html>
