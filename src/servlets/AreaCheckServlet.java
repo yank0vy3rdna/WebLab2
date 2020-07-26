@@ -13,8 +13,8 @@ import java.io.PrintWriter;
 
 @WebServlet
 public class AreaCheckServlet extends HttpServlet {
-    String getHTMLWithData(Entry entry) {
-        return "<html>\n" +
+    void sendAnswer(Entry entry, HttpServletResponse response) throws IOException {
+        String answer = "<html>\n" +
                 "  <head>\n" +
                 "    <meta charset=\"utf-8\" /> " +
                 "    <meta name=\"viewport\" content=\"width=device-width initial-scale=1\">\n" +
@@ -53,6 +53,11 @@ public class AreaCheckServlet extends HttpServlet {
                 "</table>" +
                 "<form><button type=\"submit\" class=\"btn btn-dark\">Go back</button></form>" +
                 "</div></body></html>";
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+        out.write(answer);
+        out.close();
+
     }
 
     @Override
@@ -75,10 +80,6 @@ public class AreaCheckServlet extends HttpServlet {
         entry.check();
         entryList.addEntry(entry);
         session.setAttribute("entryList", entryList);
-        resp.setContentType("text/html; charset=UTF-8");
-        PrintWriter out = resp.getWriter();
-        out.write(getHTMLWithData(entry));
-
-        out.close();
+        sendAnswer(entry,resp);
     }
 }
