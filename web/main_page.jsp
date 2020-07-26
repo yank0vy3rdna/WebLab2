@@ -35,7 +35,7 @@
                             <option>-3</option>
                             <option>-2</option>
                             <option>-1</option>
-                            <option>0</option>
+                            <option selected>0</option>
                             <option>1</option>
                             <option>2</option>
                             <option>3</option>

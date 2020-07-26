@@ -16,7 +16,12 @@ function canvas_arrow(context, fromx, fromy, tox, toy) {
 
 function draw_coordinates(ctx) {
     let R = ctx.canvas.height / 4
-    let R_text = $("#r_inp")[0].value
+    let R_text;
+    try {
+         R_text = getRValue(false)
+    }catch (e) {
+        R_text = '1'
+    }
     ctx.strokeStyle = "black";
     ctx.fillStyle = "black";
     ctx.mozImageSmoothingEnabled = false;
@@ -24,10 +29,10 @@ function draw_coordinates(ctx) {
     ctx.msImageSmoothingEnabled = false;
     ctx.imageSmoothingEnabled = false;
     //Вертикальные черты
-    ctx.fillText(-R_text / 2, Math.round((ctx.canvas.width / 2.05 + 8)), Math.round(ctx.canvas.height / 2 + R / 2 + 2))
-    ctx.fillText(-R_text, Math.round(ctx.canvas.width / 2.05 + 8), Math.round(ctx.canvas.height / 2 + R + 2))
-    ctx.fillText(R_text / 2, Math.round(ctx.canvas.width / 2.05 + 8), Math.round(ctx.canvas.height / 2 - R / 2 + 2))
-    ctx.fillText(R_text, Math.round(ctx.canvas.width / 2.05 + 8), Math.round(ctx.canvas.height / 2 - R + 2))
+    ctx.fillText(-R_text / 2, Math.round((ctx.canvas.width / 2.05 + ctx.canvas.width/40)), Math.round(ctx.canvas.height / 2 + R / 2 + 2))
+    ctx.fillText(-R_text, Math.round(ctx.canvas.width / 2.05 + ctx.canvas.width/40), Math.round(ctx.canvas.height / 2 + R + 2))
+    ctx.fillText(R_text / 2, Math.round(ctx.canvas.width / 2.05 + ctx.canvas.width/40), Math.round(ctx.canvas.height / 2 - R / 2 + 2))
+    ctx.fillText(R_text, Math.round(ctx.canvas.width / 2.05 + ctx.canvas.width/40), Math.round(ctx.canvas.height / 2 - R + 2))
     ctx.beginPath()
     ctx.moveTo(ctx.canvas.width / 2.05, ctx.canvas.height / 2 + R / 2)
     ctx.lineTo(ctx.canvas.width / 1.95, ctx.canvas.height / 2 + R / 2)
@@ -77,6 +82,7 @@ function draw_coordinates(ctx) {
 
 
 function draw() {
+
     let ctx = $('#canvas')[0].getContext('2d')
 
     if (ctx) {
@@ -101,7 +107,7 @@ function draw() {
 
         // Прямоугольник
 
-        ctx.fillRect(ctx.canvas.width / 2 - R/2, ctx.canvas.height / 2 + R, R/2, -R)
+        ctx.fillRect(ctx.canvas.width / 2 - R / 2, ctx.canvas.height / 2 + R, R / 2, -R)
 
         // Треугольник
 
@@ -126,9 +132,8 @@ function draw() {
 function drawPoint(x, y) {
     draw()
     let ctx = $('#canvas')[0].getContext('2d')
-    const r_inp = $("#r_inp")
-    let r_val = r_inp[0].value
-    if (check_val(r_inp, validate_settings.R)) {
+    try {
+        let r_val = getRValue(true)
         let R = ctx.canvas.height / 4 / r_val
 
         ctx.beginPath();
@@ -140,33 +145,36 @@ function drawPoint(x, y) {
         ctx.fillStyle = "red";
         ctx.fill();
         ctx.stroke();
-    } else {
-        invalid_mark(r_inp, false)
+    } catch (e) {
+        console.error(e)
     }
 }
 
-const elem = $('#canvas'),
-    elemLeft = elem[0].offsetLeft + elem[0].clientLeft,
-    elemTop = elem[0].offsetTop + elem[0].clientTop,
-    context = elem[0].getContext('2d')
 
 // Add event listener for `click` events.
 $('#canvas').click(function (event) {
-    const r_inp = $("#r_inp")
-    let r_val = r_inp[0].value
-    if (check_val(r_inp, validate_settings.R)) {
-        let kR = r_val / (context.canvas.height / 4)
+    const ctx = $("#canvas")[0].getContext('2d')
+    try {
+        let r_val = getRValue(true)
+        let kR = r_val / (ctx.canvas.height / 4)
         const x = event.offsetX,
             y = event.offsetY;
         console.log(x, y)
-        const rly_x = (x - context.canvas.width / 2) * kR;
-        const rly_y = (context.canvas.height / 2 - y) * kR;
+        const rly_x = (x - ctx.canvas.width / 2) * kR;
+        const rly_y = (ctx.canvas.height / 2 - y) * kR;
         console.log(rly_x, rly_y)
         drawPoint(rly_x, rly_y)
-    } else {
-        invalid_mark(r_inp, false)
+    } catch (e) {
+        console.error(e)
     }
 });
+
+function drawPointIf() {
+    if (check(false)) {
+        drawPoint()
+    }
+}
+
 $(window).resize(draw)
 $(window).on("load", draw)
 $("#r_inp").on("change", draw)

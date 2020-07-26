@@ -1,3 +1,5 @@
+
+
 const validate_settings = {
     X: {
         max: 3,
@@ -33,21 +35,48 @@ function invalid_mark(inp, valid) {
     }
 }
 
-function check_elem(elem, settings){
+function check_elem(elem, settings, mark){
     const valid = check_val(elem, settings);
-    invalid_mark(elem, valid)
+    if (mark) {
+        invalid_mark(elem, valid)
+    }
     return valid
 }
 
-function check(){
-    return check_elem($("#x_inp"), validate_settings.X) && check_elem($("#y_inp"),validate_settings.Y) && check_elem($("#r_inp"),validate_settings.R)
+function check(mark){
+    return check_elem($("#x_inp"), validate_settings.X, mark) && check_elem($("#y_inp"),validate_settings.Y, mark) && check_elem($("#r_inp"),validate_settings.R, mark)
 }
 function setEventListener(checkFunc){
     $("#submit").on('click', function(event) {
-        if (!checkFunc()){
+        if (!checkFunc(true)){
             event.preventDefault();
         }
     })
 }
 
 setEventListener(check)
+
+function getXValue() {
+    const elem = $("#x_inp")
+    if (check_elem(elem,validate_settings.X, false)){
+        return elem[0].value;
+    }else{
+        throw Error("Bad X")
+    }
+}
+function getYValue() {
+    const elem = $("#y_inp")
+    if (check_elem(elem,validate_settings.Y, false)){
+        return elem[0].value;
+    }else{
+        throw Error("Bad Y")
+    }
+}
+function getRValue(mark) {
+    const elem = $("#r_inp")
+    if (check_elem(elem,validate_settings.R, mark)){
+        return elem[0].value;
+    }else{
+        throw Error("Bad R")
+    }
+}
