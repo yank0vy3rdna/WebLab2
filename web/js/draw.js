@@ -123,6 +123,7 @@ function draw() {
         // Рисуем координатные оси
 
         draw_coordinates(ctx)
+        drawPoints()
         drawPointIfValid()
     } else {
         alert("You're using too old browser")
@@ -130,7 +131,6 @@ function draw() {
 }
 
 function drawPoint(x, y, alpha) {
-    draw()
     let ctx = $('#canvas')[0].getContext('2d')
     let r_val
     try {
@@ -192,8 +192,9 @@ function getBeforeValues() {
 }
 function drawPoints() {
     const myRows = getBeforeValues()
+    if (myRows.length === 0)
+        return
     const alphastep = myRows.length<=5? 1. / (myRows.length) : 0.2
-    draw()
     let ctx = $('#canvas')[0].getContext('2d')
     let r_val
     try {
@@ -222,7 +223,10 @@ function drawPoints() {
     }
 }
 const r_inp = $("#r_inp")
-r_inp[0].value = getBeforeValues()[0]['R']
+let historyRows = getBeforeValues()
+if(historyRows.length !== 0){
+    r_inp[0].value = historyRows[0]['R']
+}
 $(window).resize(draw)
 $(window).on("load", function () {
     draw()
