@@ -178,6 +178,7 @@ function drawPointIfValid() {
         drawPoint(getXValue(), getYValue(), 1)
     }
 }
+
 function getBeforeValues() {
     var myRows = [];
     var $headers = $("th");
@@ -190,11 +191,12 @@ function getBeforeValues() {
     });
     return myRows
 }
+
 function drawPoints() {
     const myRows = getBeforeValues()
     if (myRows.length === 0)
         return
-    const alphastep = myRows.length<=5? 1. / (myRows.length) : 0.2
+    const alphastep = myRows.length <= 5 ? 1. / (myRows.length) : 0.2
     let ctx = $('#canvas')[0].getContext('2d')
     let r_val
     try {
@@ -211,10 +213,10 @@ function drawPoints() {
         ctx.moveTo(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y);
         ctx.arc(ctx.canvas.width / 2 + R * x, ctx.canvas.height / 2 - R * y, ctx.canvas.width / 300, 0, 2 * Math.PI);
         ctx.closePath();
-        if (myRows[i]['Result']===' true '){
+        if (myRows[i]['Result'] === ' true ') {
             ctx.strokeStyle = "rgba(0, 255, 0, " + (1. - alphastep * i) + ")";
             ctx.fillStyle = "rgba(0, 255, 0, " + (1. - alphastep * i) + ")";
-        }else {
+        } else {
             ctx.strokeStyle = "rgba(255, 0, 0, " + (1. - alphastep * i) + ")";
             ctx.fillStyle = "rgba(255, 0, 0, " + (1. - alphastep * i) + ")";
         }
@@ -222,12 +224,16 @@ function drawPoints() {
         ctx.stroke();
     }
 }
+
 const r_inp = $("#r_inp")
 let historyRows = getBeforeValues()
-if(historyRows.length !== 0){
+if (historyRows.length !== 0) {
     r_inp[0].value = historyRows[0]['R']
 }
-$(window).resize(draw)
+$(window).resize(() => {
+    draw()
+    drawPoints()
+})
 $(window).on("load", function () {
     draw()
     drawPoints()
